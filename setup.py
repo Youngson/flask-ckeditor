@@ -12,7 +12,7 @@ from setuptools import setup
 
 
 setup(
-    name='flaskckeditor',
+    name='flask_ckeditor',
     version='1.7',
     url='https://github.com/neo1218/flask-ckeditor',
     license='MIT',
@@ -20,7 +20,7 @@ setup(
     author_email='neo1218@yeah.net',
     description='flask后台快速集成ckeditor编辑器',
     long_description=__doc__,
-    py_modules=['flaskckeditor'],
+    py_modules=['flask_ckeditor'],
     # if you would be using a package instead use packages instead
     # of py_modules:
     # packages=['flask_sqlite3'],
