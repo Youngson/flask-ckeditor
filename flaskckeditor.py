@@ -7,7 +7,7 @@
         Flask love CKEditor
 """
 
-from flask import request, url_for, make_response
+from flask import request, url_for, make_response, current_app
 from werkzeug import secure_filename, SharedDataMiddleware
 import os
 import random
@@ -69,14 +69,14 @@ class CKEditor(object):
             rnd_name = '%s%s' % (self.gen_rnd_filename(), fext)
 
             if not path:
-                filepath = os.path.join(name.static_folder, 'upload', rnd_name)
+                filepath = name.static_folder and os.path.join(name.static_folder, 'upload', rnd_name) or os.path.join(current_app.root_path, 'static', 'upload', rnd_name)
             else:
                 filepath = path
                 app.add_url_rule('/ckupload/<filename>', 'uploaded_file',
-                        build_only=True)
+                        build_only=True) #TODO app?
                 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
                     '/ckupload/': path
-                })
+                }) #TODO app?
 
             dirname = os.path.dirname(filepath)
             if not os.path.exists(dirname):
@@ -88,11 +88,11 @@ class CKEditor(object):
                 error = 'path <%s> not writable' % filepath
             if not error:
                 fileobj.save(filepath)
-                url = url_for('.static', filename='%s/%s' % ('upload', rnd_name))
+                url = name.static_url_path and url_for('.static', filename='%s/%s' % ('upload', rnd_name)) or url_for('static', filename='%s/%s' % ('upload', rnd_name)) #TODO 
                 # if not path:
-                #     url = url_for('.static', filename='%s/%s' % (folder, rnd_name))
+                #     url = url_for('.static', filename='%s/%s' % (folder, rnd_name)) #TODO
                 # else:
-                #     url = url_for('.uploaded_file', filename='%s/%s' % (folder, rnd_name))
+                #     url = url_for('.uploaded_file', filename='%s/%s' % (folder, rnd_name)) #TODO
         else:
             error = 'post error'
 
